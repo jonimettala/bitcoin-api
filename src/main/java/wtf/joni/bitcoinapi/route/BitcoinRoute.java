@@ -3,7 +3,7 @@ package wtf.joni.bitcoinapi.route;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 import org.springframework.stereotype.Component;
-import wtf.joni.bitcoinapi.processor.ErrorResponseCodeProcessor;
+import wtf.joni.bitcoinapi.processor.ErrorResponseProcessor;
 import wtf.joni.bitcoinapi.processor.ValidateDatesProcessor;
 
 @Component
@@ -13,9 +13,8 @@ public class BitcoinRoute extends RouteBuilder {
     public void configure() {
 
         onException(Exception.class)
-                .process(new ErrorResponseCodeProcessor())
+                .process(new ErrorResponseProcessor())
                 .log("Error: ${body}")
-                .setHeader(Exchange.CONTENT_TYPE, constant("text/plain"))
                 .handled(true)
         ;
 

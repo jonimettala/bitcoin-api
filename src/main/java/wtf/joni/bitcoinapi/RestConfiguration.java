@@ -5,25 +5,25 @@ import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.rest.RestBindingMode;
 import org.apache.camel.model.rest.RestParamType;
 import org.springframework.stereotype.Component;
+import wtf.joni.bitcoinapi.processor.ErrorResponseProcessor;
 
 @Component
 public class RestConfiguration extends RouteBuilder {
 
     @Override
-    public void configure() throws Exception {
+    public void configure() {
 
         onException(Exception.class)
-                .setHeader(Exchange.HTTP_RESPONSE_CODE, constant(400))
-                .setHeader(Exchange.CONTENT_TYPE, constant("text/plain"))
-                .setBody(constant("Bad Request"))
+                .process(new ErrorResponseProcessor())
+                .log("Error: ${body}")
                 .handled(true)
-                ;
+        ;
 
         restConfiguration()
                 .component("jetty")
                 .bindingMode(RestBindingMode.auto)
                 .dataFormatProperty("prettyPrint", "true")
-                .contextPath("/bitcoin/api/v1").port(8080)
+                .contextPath("/bitcoin/api/v1")
                 .apiContextPath("api-doc")
                 .apiProperty("api.title"," Bitcoin API")
                 .apiProperty("api.version", "1.0.0")

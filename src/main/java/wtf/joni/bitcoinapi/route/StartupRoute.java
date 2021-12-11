@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 public class StartupRoute extends RouteBuilder {
 
     @Override
-    public void configure() throws Exception {
+    public void configure() {
 
         from("timer:startupRoute?repeatCount=1")
                 .routeId("startupRoute")
