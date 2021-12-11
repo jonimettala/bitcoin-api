@@ -10,14 +10,12 @@ import wtf.joni.bitcoinapi.processor.ValidateDatesProcessor;
 public class BitcoinRoute extends RouteBuilder {
 
     @Override
-    public void configure() throws Exception {
-        onException(IllegalArgumentException.class)
-                .to("direct:setCommonErrorInfo")
-                .handled(true)
-        ;
+    public void configure() {
 
         onException(Exception.class)
-                .to("direct:setCommonErrorInfo")
+                .process(new ErrorResponseCodeProcessor())
+                .log("Error: ${body}")
+                .setHeader(Exchange.CONTENT_TYPE, constant("text/plain"))
                 .handled(true)
         ;
 
@@ -28,12 +26,6 @@ public class BitcoinRoute extends RouteBuilder {
                 .setHeader(Exchange.HTTP_RESPONSE_CODE, constant(200))
                 .setHeader(Exchange.CONTENT_TYPE, constant("text/plain"))
                 .setBody(constant("oh dog"))
-        ;
-
-        from("direct:setCommonErrorInfo")
-                .routeId("setCommonErrorInfoRoute")
-                .process(new ErrorResponseCodeProcessor())
-                .setHeader(Exchange.CONTENT_TYPE, constant("text/plain"))
         ;
     }
 }
