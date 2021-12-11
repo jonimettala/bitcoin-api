@@ -11,5 +11,9 @@ public class MyRoute extends RouteBuilder {
         from("timer:myTimer?repeatCount=1")
                 .routeId("myTimedRoute")
                 .log("oh dog");
+
+        from("direct:test")
+                .routeId("testRoute")
+                .log("triggered");
     }
 }
