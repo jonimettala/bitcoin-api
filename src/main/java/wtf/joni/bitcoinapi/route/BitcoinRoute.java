@@ -2,8 +2,10 @@ package wtf.joni.bitcoinapi.route;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.model.dataformat.JsonLibrary;
 import org.springframework.stereotype.Component;
 import wtf.joni.bitcoinapi.processor.DateValueProcessor;
+import wtf.joni.bitcoinapi.processor.DownwardTrendProcessor;
 
 @Component
 public class BitcoinRoute extends RouteBuilder {
@@ -31,7 +33,9 @@ public class BitcoinRoute extends RouteBuilder {
                 .setHeader(Exchange.HTTP_URI, simple("{{coingecko.url.base}}"
                         + "&from=${exchangeProperty.fromEpoch}&to=${exchangeProperty.toEpoch}"))
                 .to("http:value.in.headers")
-                .log("Data fetched")
+                .unmarshal().json(JsonLibrary.Jackson)
+                .log("Data fetched, trying to process...")
+                .process(new DownwardTrendProcessor())
                 .setHeader(Exchange.HTTP_RESPONSE_CODE, constant(200))
                 //.log("${body}")
         ;
