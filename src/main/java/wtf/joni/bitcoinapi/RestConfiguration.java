@@ -1,6 +1,5 @@
 package wtf.joni.bitcoinapi;
 
-import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.rest.RestBindingMode;
 import org.apache.camel.model.rest.RestParamType;
@@ -25,7 +24,7 @@ public class RestConfiguration extends RouteBuilder {
                 .dataFormatProperty("prettyPrint", "true")
                 .contextPath("/bitcoin/api/v1")
                 .apiContextPath("api-doc")
-                .apiProperty("api.title"," Bitcoin API")
+                .apiProperty("api.title", "Bitcoin API")
                 .apiProperty("api.version", "1.0.0")
                 .apiProperty("api.description", "API for checking certain bitcoin information.")
         ;
@@ -51,6 +50,5 @@ public class RestConfiguration extends RouteBuilder {
                         .endParam()
                     .to("direct:downward")
         ;
-
     }
 }
