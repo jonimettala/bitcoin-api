@@ -1,11 +1,9 @@
 package wtf.joni.bitcoinapi.route;
 
+import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 import org.springframework.stereotype.Component;
-import wtf.joni.bitcoinapi.processor.ValidateDatesProcessor;
-
-import static org.apache.camel.Exchange.CONTENT_TYPE;
-import static org.apache.camel.Exchange.HTTP_RESPONSE_CODE;
+import wtf.joni.bitcoinapi.processor.DateValueProcessor;
 
 @Component
 public class BitcoinRoute extends RouteBuilder {
@@ -26,13 +24,15 @@ public class BitcoinRoute extends RouteBuilder {
                 .routeId("downwardRoute")
                 .removeHeaders("CamelHttp*")
                 .log("New request; from: ${header.from}; to: ${header.to}")
-                .process(new ValidateDatesProcessor())
-                .setHeader(CONTENT_TYPE, constant("application/json"))
+                .process(new DateValueProcessor())
+                .log("Trying to fetch data; from: ${exchangeProperty.fromEpoch}; to: ${exchangeProperty.toEpoch}")
+                .setHeader(Exchange.CONTENT_TYPE, constant("application/json"))
                 .setHeader("Accept", constant("application/json"))
-                .log("Trying to fetch data...")
-                .to("{{coingecko.url.base}}&from=1577836800&to=1609376400")
+                .setHeader(Exchange.HTTP_URI, simple("{{coingecko.url.base}}"
+                        + "&from=${exchangeProperty.fromEpoch}&to=${exchangeProperty.toEpoch}"))
+                .to("http:value.in.headers")
                 .log("Data fetched")
-                .setHeader(HTTP_RESPONSE_CODE, constant(200))
+                .setHeader(Exchange.HTTP_RESPONSE_CODE, constant(200))
                 //.log("${body}")
         ;
     }
