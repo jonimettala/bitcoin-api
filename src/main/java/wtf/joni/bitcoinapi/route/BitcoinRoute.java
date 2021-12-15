@@ -5,8 +5,10 @@ import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.dataformat.JsonLibrary;
 import org.eclipse.jetty.http.HttpMethod;
 import org.springframework.stereotype.Component;
+import wtf.joni.bitcoinapi.JsonResponse;
+import wtf.joni.bitcoinapi.processor.CountDownwardTrend;
 import wtf.joni.bitcoinapi.processor.DateValueProcessor;
-import wtf.joni.bitcoinapi.processor.DownwardTrendProcessor;
+import wtf.joni.bitcoinapi.processor.DecompressBrotli;
 
 @Component
 public class BitcoinRoute extends RouteBuilder {
@@ -46,7 +48,9 @@ public class BitcoinRoute extends RouteBuilder {
                 //.convertBodyTo(String.class, "UTF-8")
                 //.unmarshal().json(JsonLibrary.Jackson)
                 .log("Data fetched, trying to process...")
-                .process(new DownwardTrendProcessor())
+                .process(new DecompressBrotli())
+                .process(new CountDownwardTrend())
+                .log("${body}")
                 .setHeader(Exchange.HTTP_RESPONSE_CODE, constant(200))
                 //.log("${body}")
         ;

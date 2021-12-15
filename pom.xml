@@ -28,21 +28,21 @@
 			<artifactId>camel-gson-starter</artifactId>
 			<version>${camel.version}</version>
 		</dependency-->
-		<!--dependency>
+		<dependency>
 			<groupId>org.apache.camel.springboot</groupId>
 			<artifactId>camel-jackson-starter</artifactId>
 			<version>${camel.version}</version>
-		</dependency-->
-		<dependency>
+		</dependency>
+		<!--dependency>
 			<groupId>org.apache.camel.springboot</groupId>
 			<artifactId>camel-zip-deflater-starter</artifactId>
 			<version>${camel.version}</version>
-		</dependency>
-		<dependency>
+		</dependency-->
+		<!--dependency>
 			<groupId>org.apache.camel.springboot</groupId>
 			<artifactId>camel-zipfile-starter</artifactId>
 			<version>${camel.version}</version>
-		</dependency>
+		</dependency-->
 		<dependency>
 			<groupId>org.apache.camel.springboot</groupId>
 			<artifactId>camel-openapi-java-starter</artifactId>

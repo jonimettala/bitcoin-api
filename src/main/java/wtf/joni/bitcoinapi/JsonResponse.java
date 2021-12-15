@@ -6,35 +6,35 @@ import java.util.List;
 
 public class JsonResponse {
     @JsonProperty("prices")
-    private List<Float[]> prices;
+    private List<long[]> prices;
 
     @JsonProperty("market_caps")
-    private List<Float[]> marketCaps;
+    private List<long[]> marketCaps;
 
     @JsonProperty("total_volumes")
-    private List<Float[]> totalVolumes;
+    private List<long[]> totalVolumes;
 
-    public List<Float[]> getPrices() {
+    public List<long[]> getPrices() {
         return prices;
     }
 
-    public void setPrices(List<Float[]> prices) {
+    public void setPrices(List<long[]> prices) {
         this.prices = prices;
     }
 
-    public List<Float[]> getMarketCaps() {
+    public List<long[]> getMarketCaps() {
         return marketCaps;
     }
 
-    public void setMarketCaps(List<Float[]> marketCaps) {
+    public void setMarketCaps(List<long[]> marketCaps) {
         this.marketCaps = marketCaps;
     }
 
-    public List<Float[]> getTotalVolumes() {
+    public List<long[]> getTotalVolumes() {
         return totalVolumes;
     }
 
-    public void setTotalVolumes(List<Float[]> totalVolumes) {
+    public void setTotalVolumes(List<long[]> totalVolumes) {
         this.totalVolumes = totalVolumes;
     }
 }

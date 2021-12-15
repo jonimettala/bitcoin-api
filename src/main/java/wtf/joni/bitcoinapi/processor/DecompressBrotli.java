@@ -12,20 +12,17 @@ import java.util.stream.Collectors;
 
 
 @Component
-public class DownwardTrendProcessor implements Processor {
+public class DecompressBrotli implements Processor {
 
     @Override
     public void process(Exchange exchange) throws Exception {
         byte[] body = exchange.getIn().getBody(byte[].class);
 
         Brotli4jLoader.ensureAvailability();
-
-
         BufferedReader rd = new BufferedReader(new InputStreamReader(
                 new BrotliInputStream(
                         new ByteArrayInputStream(body)), StandardCharsets.UTF_8));
 
-        System.out.println(rd.lines().collect(Collectors.joining()));
-
+        exchange.getMessage().setBody(rd.lines().collect(Collectors.joining()));
     }
 }
