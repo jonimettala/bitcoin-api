@@ -31,7 +31,8 @@ public class DateValueProcessor implements Processor {
             }
 
             exchange.setProperty("fromEpoch", Integer.toString(fromEpoch));
-            exchange.setProperty("toEpoch", Integer.toString(toEpoch));
+            // Adding an hour to get last day's results for sure
+            exchange.setProperty("toEpoch", Integer.toString(toEpoch + 3600));
         } else {
             String message = "Invalid 'from' and 'to' headers, both must be in a form of 'yyyy-mm-dd'";
             exchange.setProperty("errorMessage", message);

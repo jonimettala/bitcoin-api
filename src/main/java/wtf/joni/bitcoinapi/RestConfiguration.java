@@ -20,7 +20,7 @@ public class RestConfiguration extends RouteBuilder {
 
         restConfiguration()
                 .component("jetty")
-                //.bindingMode(RestBindingMode.auto)
+                .bindingMode(RestBindingMode.auto)
                 .dataFormatProperty("prettyPrint", "true")
                 .contextPath("/bitcoin/api/v1")
                 .apiContextPath("api-doc")

@@ -7,13 +7,13 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class CoinGeckoUtils {
 
-    protected static Map<Long, BigDecimal> resolveDailyItems(JsonNode json) {
-        Map<Long, BigDecimal> dailyItems = new HashMap<>();
+    public static Map<Long, BigDecimal> resolveDailyItems(JsonNode json) {
+        Map<Long, BigDecimal> dailyItems = new LinkedHashMap<>();
 
         System.out.println(json);
 
