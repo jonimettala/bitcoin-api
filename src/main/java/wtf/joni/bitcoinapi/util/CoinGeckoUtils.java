@@ -12,10 +12,16 @@ import java.util.Map;
 
 public class CoinGeckoUtils {
 
+    /**
+     * Resolve a list of daily values. Drops additional values so that one date will have only one value.
+     * Leaves the first value after midnight (UTC).
+     * @param json JSON to resolve.
+     * @return List of daily values.
+     */
     public static Map<Long, BigDecimal> resolveDailyItems(JsonNode json) {
         Map<Long, BigDecimal> dailyItems = new LinkedHashMap<>();
 
-        System.out.println(json);
+        // System.out.println(json);
 
         LocalDateTime previousDate = null;
 
@@ -28,6 +34,7 @@ public class CoinGeckoUtils {
             ZonedDateTime zdt = Instant.ofEpochMilli(epoch).atZone(ZoneId.of("UTC"));
             LocalDateTime dateTime = zdt.toLocalDateTime();
 
+            // Looping though the list, adding the first value of each date
             if (previousDate == null || dateTime.getDayOfMonth() != previousDate.getDayOfMonth()) {
                 dailyItems.put(epoch, new BigDecimal(item.get(1).asText()));
             }

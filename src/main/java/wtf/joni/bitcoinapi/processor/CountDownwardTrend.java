@@ -39,8 +39,9 @@ public class CountDownwardTrend implements Processor {
         }
 
         ApiResponse response = new ApiResponse();
-        response.setValue(bestStreak);
+        response.setStatus("success");
         response.setDescription("Longest downward trend (days)");
+        response.setValue(bestStreak);
 
         exchange.getMessage().setBody(response);
     }

@@ -48,7 +48,7 @@ public class RestConfiguration extends RouteBuilder {
                         .description("To date for the time range")
                         .example("2021-12-24")
                         .endParam()
-                    .to("direct:downward")
+                    .to("direct:downwardTrend")
         ;
     }
 }
