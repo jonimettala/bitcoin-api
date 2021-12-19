@@ -20,13 +20,12 @@ public class CoinGeckoUtils {
         LocalDateTime previousDate = null;
 
         for (JsonNode item : json) {
-            System.out.println(item);
+            //System.out.println(item);
 
             Long epoch = Long.parseLong(item.get(0).asText());
-            System.out.println(epoch);
+            //System.out.println(epoch);
 
             ZonedDateTime zdt = Instant.ofEpochMilli(epoch).atZone(ZoneId.of("UTC"));
-
             LocalDateTime dateTime = zdt.toLocalDateTime();
 
             if (previousDate == null || dateTime.getDayOfMonth() != previousDate.getDayOfMonth()) {
@@ -34,11 +33,9 @@ public class CoinGeckoUtils {
             }
             previousDate = dateTime;
 
-            System.out.println(dateTime);
-
+            // System.out.println(dateTime);
         }
-
-        System.out.println(dailyItems);
+        //System.out.println(dailyItems);
 
         return dailyItems;
     }
