@@ -3,7 +3,6 @@ package wtf.joni.bitcoinapi.util;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import wtf.joni.bitcoinapi.processor.CountDownwardTrend;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -24,11 +23,11 @@ public class CoinGeckoUtils {
      * @return List of daily values.
      */
     public static Map<Long, BigDecimal> resolveDailyItems(JsonNode json) {
-        Map<Long, BigDecimal> dailyItems = new LinkedHashMap<>();
         LOG.debug("DAILY ITEMS (in): \n" + json.toString());
 
-        LocalDateTime previousDate = null;
+        Map<Long, BigDecimal> dailyItems = new LinkedHashMap<>();
 
+        LocalDateTime previousDate = null;
         for (JsonNode item : json) {
             Long epoch = Long.parseLong(item.get(0).asText());
 

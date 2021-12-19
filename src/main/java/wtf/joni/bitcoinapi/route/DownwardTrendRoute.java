@@ -26,6 +26,16 @@ public class DownwardTrendRoute extends RouteBuilder {
 
         from("direct:downwardTrend")
                 .routeId("downwardTrendRoute")
+                .to("direct:preprocess")
+                .log("Trying to count the downward trend")
+                .process(new CountDownwardTrend())
+                .log("Downward trend counting succeed, returning API response:\n\n"
+                        + "${body.getDescription}: ${body.getValue}")
+                .to("direct:postprocess")
+        ;
+
+        from("direct:preprocess")
+                .routeId("preprocessRoute")
                 .removeHeaders("CamelHttp*")
                 .log("New request; from: ${header.from}; to: ${header.to}")
                 .process(new DateValueProcessor())
@@ -35,12 +45,13 @@ public class DownwardTrendRoute extends RouteBuilder {
                 .setHeader(Exchange.HTTP_URI, simple("{{coingecko.url.base}}"
                         + "&from=${exchangeProperty.fromEpoch}&to=${exchangeProperty.toEpoch}"))
                 .to("http:value.in.headers")
-                .log("Data fetched, trying to process...")
+                .log("Data fetched, trying to decompress...")
                 .process(new DecompressBrotli())
-                .log("Brotli decompressed, trying to count downward trend...")
-                .process(new CountDownwardTrend())
-                .log("Downward trend counting succeed, returning API response:\n\n"
-                        + "${body.getDescription}: ${body.getValue}")
+                .log("Brotli decompressed")
+        ;
+
+        from("direct:postprocess")
+                .routeId("postprocessRoute")
                 .removeHeaders("*")
                 .setHeader(Exchange.HTTP_CHARACTER_ENCODING, constant("application/json; charset=utf-8"))
                 .setHeader(Exchange.HTTP_RESPONSE_CODE, constant(200))
