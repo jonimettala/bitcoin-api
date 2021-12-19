@@ -10,7 +10,7 @@ public class ApiResponse {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String description;
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     private int value;
 
     public String getStatus() {

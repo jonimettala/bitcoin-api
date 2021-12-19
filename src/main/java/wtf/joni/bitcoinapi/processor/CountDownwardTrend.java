@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import wtf.joni.bitcoinapi.model.ApiResponse;
 
 import java.math.BigDecimal;
@@ -12,6 +14,8 @@ import java.util.Map;
 import static wtf.joni.bitcoinapi.util.CoinGeckoUtils.resolveDailyItems;
 
 public class CountDownwardTrend implements Processor {
+
+    private static final Logger LOG = LoggerFactory.getLogger(CountDownwardTrend.class);
 
     @Override
     public void process(Exchange exchange) throws Exception {
@@ -35,7 +39,7 @@ public class CountDownwardTrend implements Processor {
             }
             previousPrice = entry.getValue();
 
-            // System.out.println(entry.getValue() + " " + currentStreak + " " + bestStreak);
+            LOG.debug(entry.getValue() + " " + currentStreak + " " + bestStreak);
         }
 
         ApiResponse response = new ApiResponse();

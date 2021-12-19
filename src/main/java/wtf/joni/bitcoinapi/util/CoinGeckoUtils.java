@@ -1,6 +1,9 @@
 package wtf.joni.bitcoinapi.util;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import wtf.joni.bitcoinapi.processor.CountDownwardTrend;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -12,6 +15,8 @@ import java.util.Map;
 
 public class CoinGeckoUtils {
 
+    private static final Logger LOG = LoggerFactory.getLogger(CoinGeckoUtils.class);
+
     /**
      * Resolve a list of daily values. Drops additional values so that one date will have only one value.
      * Leaves the first value after midnight (UTC).
@@ -20,16 +25,12 @@ public class CoinGeckoUtils {
      */
     public static Map<Long, BigDecimal> resolveDailyItems(JsonNode json) {
         Map<Long, BigDecimal> dailyItems = new LinkedHashMap<>();
-
-        // System.out.println(json);
+        LOG.debug("DAILY ITEMS (in): \n" + json.toString());
 
         LocalDateTime previousDate = null;
 
         for (JsonNode item : json) {
-            //System.out.println(item);
-
             Long epoch = Long.parseLong(item.get(0).asText());
-            //System.out.println(epoch);
 
             ZonedDateTime zdt = Instant.ofEpochMilli(epoch).atZone(ZoneId.of("UTC"));
             LocalDateTime dateTime = zdt.toLocalDateTime();
@@ -39,10 +40,8 @@ public class CoinGeckoUtils {
                 dailyItems.put(epoch, new BigDecimal(item.get(1).asText()));
             }
             previousDate = dateTime;
-
-            // System.out.println(dateTime);
         }
-        //System.out.println(dailyItems);
+        LOG.debug("DAILY ITEMS (out):\n" + dailyItems);
 
         return dailyItems;
     }
