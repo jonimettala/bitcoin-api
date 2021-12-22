@@ -2,6 +2,8 @@ package wtf.joni.bitcoinapi.processor;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
@@ -10,7 +12,9 @@ import java.util.Date;
 import java.util.regex.Pattern;
 
 @Component
-public class DateValueProcessor implements Processor {
+public class PrepareDateValues implements Processor {
+
+    private static final Logger LOG = LoggerFactory.getLogger(PrepareDateValues.class);
 
     @Override
     public void process(Exchange exchange) throws Exception {
@@ -30,9 +34,15 @@ public class DateValueProcessor implements Processor {
                 throw new Exception(message);
             }
 
-            exchange.setProperty("fromEpoch", Integer.toString(fromEpoch));
+            int offset = 0;
+            if (exchange.getProperty("offset") != null) {
+                offset = (int) exchange.getProperty("offset");
+            }
+            LOG.debug("Offset: " + offset);
+
+            exchange.setProperty("fromEpoch", Integer.toString(fromEpoch + offset));
             // Adding an hour to get last day's results for sure
-            exchange.setProperty("toEpoch", Integer.toString(toEpoch + 3600));
+            exchange.setProperty("toEpoch", Integer.toString(toEpoch + 3600 + offset));
         } else {
             String message = "Invalid 'from' and 'to' headers, both must be in a form of 'yyyy-mm-dd'";
             exchange.setProperty("errorMessage", message);

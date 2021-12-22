@@ -4,7 +4,7 @@ import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.rest.RestBindingMode;
 import org.apache.camel.model.rest.RestParamType;
 import org.springframework.stereotype.Component;
-import wtf.joni.bitcoinapi.processor.ErrorResponseProcessor;
+import wtf.joni.bitcoinapi.processor.PrepareErrorResponse;
 
 @Component
 public class RestConfiguration extends RouteBuilder {
@@ -13,7 +13,7 @@ public class RestConfiguration extends RouteBuilder {
     public void configure() {
 
         onException(Exception.class)
-                .process(new ErrorResponseProcessor())
+                .process(new PrepareErrorResponse())
                 .log("Error: ${body}")
                 .handled(true)
         ;
@@ -49,6 +49,26 @@ public class RestConfiguration extends RouteBuilder {
                         .example("2021-12-24")
                         .endParam()
                     .to("direct:downwardTrend")
+
+                .get("/highest")
+                    .description("Gets the date with the highest trading volume within a given date range.")
+                    .param()
+                        .name("from")
+                        .dataType("string")
+                        .type(RestParamType.query)
+                        .required(true)
+                        .description("From date for the time range")
+                        .example("2021-12-01")
+                        .endParam()
+                    .param()
+                        .name("to")
+                        .dataType("string")
+                        .type(RestParamType.query)
+                        .required(true)
+                        .description("To date for the time range")
+                        .example("2021-12-24")
+                        .endParam()
+                    .to("direct:highestVolume")
         ;
     }
 }

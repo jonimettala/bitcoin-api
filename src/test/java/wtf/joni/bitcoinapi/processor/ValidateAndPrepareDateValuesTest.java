@@ -5,10 +5,10 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static wtf.joni.bitcoinapi.processor.DateValueProcessor.convertToEpoch;
-import static wtf.joni.bitcoinapi.processor.DateValueProcessor.dateIsValid;
+import static wtf.joni.bitcoinapi.processor.PrepareDateValues.convertToEpoch;
+import static wtf.joni.bitcoinapi.processor.PrepareDateValues.dateIsValid;
 
-public class DateValueProcessorTest {
+public class ValidateAndPrepareDateValuesTest {
 
     @Test
     public void convertDateToEpoch() {

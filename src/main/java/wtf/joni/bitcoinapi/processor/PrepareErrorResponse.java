@@ -9,7 +9,7 @@ import static org.apache.camel.Exchange.CONTENT_TYPE;
 import static org.apache.camel.Exchange.HTTP_RESPONSE_CODE;
 
 @Component
-public class ErrorResponseProcessor implements Processor {
+public class PrepareErrorResponse implements Processor {
 
     @Override
     public void process(Exchange exchange) {
