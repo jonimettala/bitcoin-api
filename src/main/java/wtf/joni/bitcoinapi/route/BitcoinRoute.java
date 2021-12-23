@@ -17,6 +17,7 @@ public class BitcoinRoute extends RouteBuilder {
     @Override
     public void configure() {
 
+        /*
         onException(Exception.class)
                 .removeHeaders("*")
                 .process(new PrepareErrorResponse())
@@ -25,13 +26,15 @@ public class BitcoinRoute extends RouteBuilder {
                 .marshal().json(JsonLibrary.Jackson)
         ;
 
+         */
+
         from("direct:downwardTrend")
                 .routeId("downwardTrendRoute")
                 .to("direct:preprocess")
                 .log("Trying to count the downward trend")
                 .process(new CountDownwardTrend())
-                .log("Downward trend counting succeed, returning API response:\n\n"
-                        + "${body.getDescription}: ${body.getValue}")
+                .log("Downward trend counting succeed, returning API response: "
+                        + "${body.getDescription}: ${body.getLongestTrend}")
                 .to("direct:postprocess")
         ;
 
@@ -41,7 +44,7 @@ public class BitcoinRoute extends RouteBuilder {
                 .setProperty("offset", constant(86400))
                 .to("direct:preprocess")
                 .process(new CountHighestTradingVolume())
-                .unmarshal().json()
+                //.unmarshal().json()
                 .to("direct:postprocess")
         ;
 

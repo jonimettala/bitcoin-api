@@ -10,9 +10,6 @@ public class ApiResponse {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String description;
 
-    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
-    private int value;
-
     public String getStatus() {
         return status;
     }
@@ -27,13 +24,5 @@ public class ApiResponse {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public int getValue() {
-        return value;
-    }
-
-    public void setValue(int value) {
-        this.value = value;
     }
 }

@@ -6,7 +6,7 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import wtf.joni.bitcoinapi.model.ApiResponse;
+import wtf.joni.bitcoinapi.model.DownwardTrendResponse;
 
 import java.math.BigDecimal;
 import java.util.Map;
@@ -24,28 +24,28 @@ public class CountDownwardTrend implements Processor {
 
         Map<Long, BigDecimal> dailyValues = resolveDailyItems(prices);
 
-        int bestStreak = 0;
+        int longestStreak = 0;
         int currentStreak = 0;
         BigDecimal previousPrice = new BigDecimal("0");
 
         for (Map.Entry<Long, BigDecimal> entry : dailyValues.entrySet()) {
             if (entry.getValue().compareTo(previousPrice) < 0) {
                 currentStreak++;
-                if (currentStreak > bestStreak) {
-                    bestStreak = currentStreak;
+                if (currentStreak > longestStreak) {
+                    longestStreak = currentStreak;
                 }
             } else {
                 currentStreak = 0;
             }
             previousPrice = entry.getValue();
 
-            LOG.debug(entry.getValue() + " " + currentStreak + " " + bestStreak);
+            LOG.debug(entry.getValue() + " " + currentStreak + " " + longestStreak);
         }
 
-        ApiResponse response = new ApiResponse();
+        DownwardTrendResponse response = new DownwardTrendResponse();
         response.setStatus("success");
         response.setDescription("Longest downward trend (days)");
-        response.setValue(bestStreak);
+        response.setLongestTrend(longestStreak);
 
         exchange.getMessage().setBody(response);
     }
