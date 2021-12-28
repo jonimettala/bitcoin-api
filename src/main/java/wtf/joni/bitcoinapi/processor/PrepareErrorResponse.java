@@ -17,7 +17,6 @@ public class PrepareErrorResponse implements Processor {
         String message = exchange.getProperty("errorMessage", String.class);
 
         ApiResponse response = new ApiResponse();
-        response.setStatus("error");
         response.setDescription(message == null ? "Something went wrong when processing the request" : message);
 
         exchange.getMessage().setHeader(CONTENT_TYPE, "text/plain");

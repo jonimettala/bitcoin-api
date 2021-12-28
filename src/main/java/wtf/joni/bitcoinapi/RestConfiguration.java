@@ -69,6 +69,26 @@ public class RestConfiguration extends RouteBuilder {
                         .example("2021-12-24")
                         .endParam()
                     .to("direct:highestVolume")
+
+                .get("/timemachine")
+                .description("Get retrospectively the best time to buy bitcoin and then sell it within a time range.")
+                .param()
+                .name("from")
+                .dataType("string")
+                .type(RestParamType.query)
+                .required(true)
+                .description("From date for the time range")
+                .example("2021-12-01")
+                .endParam()
+                .param()
+                .name("to")
+                .dataType("string")
+                .type(RestParamType.query)
+                .required(true)
+                .description("To date for the time range")
+                .example("2021-12-24")
+                .endParam()
+                .to("direct:timeMachine")
         ;
     }
 }

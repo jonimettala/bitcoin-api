@@ -1,18 +1,19 @@
 package wtf.joni.bitcoinapi.model;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 public class HighestVolumeResponse extends ApiResponse {
 
-    String date;
+    LocalDate date;
     BigDecimal volume;
     String currency;
 
-    public String getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 

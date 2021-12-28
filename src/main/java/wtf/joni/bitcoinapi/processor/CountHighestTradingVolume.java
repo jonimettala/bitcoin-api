@@ -9,7 +9,10 @@ import org.slf4j.LoggerFactory;
 import wtf.joni.bitcoinapi.model.HighestVolumeResponse;
 
 import java.math.BigDecimal;
-import java.time.*;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Map;
 
 import static wtf.joni.bitcoinapi.util.CoinGeckoUtils.resolveDailyItems;
@@ -46,9 +49,8 @@ public class CountHighestTradingVolume implements Processor {
         LocalDate dateTime = zdt.toLocalDate().minusDays(1);
 
         HighestVolumeResponse response = new HighestVolumeResponse();
-        response.setStatus("success");
         response.setDescription("Highest volume");
-        response.setDate(dateTime.toString());
+        response.setDate(dateTime);
         response.setVolume(highestVolume);
         response.setCurrency("EUR");
 

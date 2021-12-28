@@ -43,7 +43,6 @@ public class CountDownwardTrend implements Processor {
         }
 
         DownwardTrendResponse response = new DownwardTrendResponse();
-        response.setStatus("success");
         response.setDescription("Longest downward trend (days)");
         response.setLongestTrend(longestStreak);
 

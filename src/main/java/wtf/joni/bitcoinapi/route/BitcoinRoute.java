@@ -1,15 +1,15 @@
 package wtf.joni.bitcoinapi.route;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.apache.camel.Exchange;
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.dataformat.JsonLibrary;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
-import wtf.joni.bitcoinapi.processor.CountDownwardTrend;
-import wtf.joni.bitcoinapi.processor.CountHighestTradingVolume;
-import wtf.joni.bitcoinapi.processor.DecompressBrotli;
-import wtf.joni.bitcoinapi.processor.PrepareErrorResponse;
-import wtf.joni.bitcoinapi.processor.PrepareDateValues;
+import wtf.joni.bitcoinapi.processor.*;
 
 @Component
 public class BitcoinRoute extends RouteBuilder {
@@ -17,40 +17,46 @@ public class BitcoinRoute extends RouteBuilder {
     @Override
     public void configure() {
 
-        /*
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+
         onException(Exception.class)
                 .removeHeaders("*")
                 .process(new PrepareErrorResponse())
                 .log(LoggingLevel.WARN, "Error: ${body.getDescription}")
                 .handled(true)
-                .marshal().json(JsonLibrary.Jackson)
-        ;
-
-         */
+                .marshal().json(JsonLibrary.Jackson);
 
         from("direct:downwardTrend")
                 .routeId("downwardTrendRoute")
+                .log("New request; from: ${header.from}; to: ${header.to}")
                 .to("direct:preprocess")
                 .log("Trying to count the downward trend")
                 .process(new CountDownwardTrend())
                 .log("Downward trend counting succeed, returning API response: "
                         + "${body.getDescription}: ${body.getLongestTrend}")
-                .to("direct:postprocess")
-        ;
+                .to("direct:postprocess");
 
         from("direct:highestVolume")
                 .routeId("highestVolumeRoute")
+                .log("New request; from: ${header.from}; to: ${header.to}")
                 // 1d offset. Market volume is for the previous 24h, using the following midnight data for each day.
                 .setProperty("offset", constant(86400))
                 .to("direct:preprocess")
+                .log("Trying to count the highest trading volume")
                 .process(new CountHighestTradingVolume())
                 //.unmarshal().json()
-                .to("direct:postprocess")
-        ;
+                .to("direct:postprocess");
+
+        from("direct:timeMachine")
+                .routeId("timeMachineRoute")
+                .log("New request; from: ${header.from}; to: ${header.to}")
+                .to("direct:preprocess")
+                .process(new CountBestBuyAndSellDates())
+                .to("direct:postprocess");
 
         from("direct:preprocess")
                 .routeId("preprocessRoute")
-                .log("New request; from: ${header.from}; to: ${header.to}")
                 .process(new PrepareDateValues())
                 .removeHeaders("*")
                 .log("Trying to fetch data; from: ${exchangeProperty.fromEpoch}; "
@@ -63,14 +69,24 @@ public class BitcoinRoute extends RouteBuilder {
                 .to("http:value.in.headers")
                 .log("Data fetched, trying to decompress...")
                 .process(new DecompressBrotli())
-                .log("Brotli decompressed")
-        ;
+                .log("Brotli decompressed");
 
         from("direct:postprocess")
                 .routeId("postprocessRoute")
                 .removeHeaders("*")
                 .setHeader(Exchange.HTTP_CHARACTER_ENCODING, constant("application/json; charset=utf-8"))
-                .setHeader(Exchange.HTTP_RESPONSE_CODE, constant(200))
-        ;
+                .setHeader(Exchange.HTTP_RESPONSE_CODE, constant(200));
+    }
+
+    /**
+     * Handles LocalDate serialization.
+     * @return Default object mapper.
+     */
+    @Bean
+    public ObjectMapper defaultMapper() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+        return objectMapper;
     }
 }
