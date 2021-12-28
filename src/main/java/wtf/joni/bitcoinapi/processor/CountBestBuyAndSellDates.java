@@ -9,12 +9,11 @@ import org.slf4j.LoggerFactory;
 import wtf.joni.bitcoinapi.model.TimeMachineResponse;
 
 import java.math.BigDecimal;
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.Map;
 
 import static wtf.joni.bitcoinapi.util.CoinGeckoUtils.resolveDailyItems;
+import static wtf.joni.bitcoinapi.util.TimeUtils.convertEpochToDate;
 
 public class CountBestBuyAndSellDates implements Processor {
 
@@ -66,9 +65,5 @@ public class CountBestBuyAndSellDates implements Processor {
         }
 
         exchange.getMessage().setBody(response);
-    }
-
-    private LocalDate convertEpochToDate(long epoch) {
-        return Instant.ofEpochMilli(epoch).atZone(ZoneId.of("UTC")).toLocalDate();
     }
 }

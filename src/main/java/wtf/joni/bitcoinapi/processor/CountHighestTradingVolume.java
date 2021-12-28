@@ -9,13 +9,11 @@ import org.slf4j.LoggerFactory;
 import wtf.joni.bitcoinapi.model.HighestVolumeResponse;
 
 import java.math.BigDecimal;
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.Map;
 
 import static wtf.joni.bitcoinapi.util.CoinGeckoUtils.resolveDailyItems;
+import static wtf.joni.bitcoinapi.util.TimeUtils.convertEpochToDate;
 
 public class CountHighestTradingVolume implements Processor {
 
@@ -45,8 +43,7 @@ public class CountHighestTradingVolume implements Processor {
         Volume is for the previous 24h. We have the epoch for just after midnight, meaning that the total volume
         really concerned the previous day. Therefore, minus one day in LocalDate.
          */
-        ZonedDateTime zdt = Instant.ofEpochMilli(highestDate).atZone(ZoneId.of("UTC"));
-        LocalDate dateTime = zdt.toLocalDate().minusDays(1);
+        LocalDate dateTime = convertEpochToDate(highestDate).minusDays(1);
 
         HighestVolumeResponse response = new HighestVolumeResponse();
         response.setDescription("Highest volume");
