@@ -9,16 +9,18 @@ import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.dataformat.JsonLibrary;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
-import wtf.joni.bitcoinapi.processor.*;
+import wtf.joni.bitcoinapi.processor.CountBestBuyAndSellDates;
+import wtf.joni.bitcoinapi.processor.CountDownwardTrend;
+import wtf.joni.bitcoinapi.processor.CountHighestTradingVolume;
+import wtf.joni.bitcoinapi.processor.DecompressBrotli;
+import wtf.joni.bitcoinapi.processor.PrepareDateValues;
+import wtf.joni.bitcoinapi.processor.PrepareErrorResponse;
 
 @Component
 public class BitcoinRoute extends RouteBuilder {
 
     @Override
     public void configure() {
-
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new JavaTimeModule());
 
         onException(Exception.class)
                 .removeHeaders("*")
@@ -33,8 +35,7 @@ public class BitcoinRoute extends RouteBuilder {
                 .to("direct:preprocess")
                 .log("Trying to count the downward trend")
                 .process(new CountDownwardTrend())
-                .log("Downward trend counting succeed, returning API response: "
-                        + "${body.getDescription}: ${body.getLongestTrend}")
+                .log("Counting succeed: ${body.getDescription}")
                 .to("direct:postprocess");
 
         from("direct:highestVolume")
@@ -45,14 +46,16 @@ public class BitcoinRoute extends RouteBuilder {
                 .to("direct:preprocess")
                 .log("Trying to count the highest trading volume")
                 .process(new CountHighestTradingVolume())
-                //.unmarshal().json()
+                .log("Counting succeed: ${body.getDescription}")
                 .to("direct:postprocess");
 
         from("direct:timeMachine")
                 .routeId("timeMachineRoute")
                 .log("New request; from: ${header.from}; to: ${header.to}")
                 .to("direct:preprocess")
+                .log("Trying to count best buy and sell dates")
                 .process(new CountBestBuyAndSellDates())
+                .log("Counting succeed: ${body.getDescription}")
                 .to("direct:postprocess");
 
         from("direct:preprocess")

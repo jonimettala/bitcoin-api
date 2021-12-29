@@ -1,18 +1,25 @@
-package wtf.joni.bitcoinapi.processor;
+package wtf.joni.bitcoinapi.util;
 
 import org.junit.jupiter.api.Test;
+
+import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static wtf.joni.bitcoinapi.processor.PrepareDateValues.convertToEpoch;
-import static wtf.joni.bitcoinapi.processor.PrepareDateValues.dateIsValid;
+import static wtf.joni.bitcoinapi.util.TimeUtils.*;
 
-public class ValidateAndPrepareDateValuesTest {
+public class TimeUtilsTest {
+
+    @Test
+    public void convertEpochToLocalDate() {
+        LocalDate date = convertEpochToDate(1579402947092L);
+        assertEquals("2020-01-19", date.toString());
+    }
 
     @Test
     public void convertDateToEpoch() {
-        int epoch = 0;
+        long epoch = 0;
         try {
             epoch = convertToEpoch("2020-01-01");
         } catch (Exception e) {
@@ -28,3 +35,5 @@ public class ValidateAndPrepareDateValuesTest {
         assertFalse(dateIsValid("2021-04-33"));
     }
 }
+
+

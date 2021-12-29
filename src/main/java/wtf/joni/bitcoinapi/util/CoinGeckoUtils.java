@@ -5,12 +5,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+import static wtf.joni.bitcoinapi.util.TimeUtils.convertEpochToDate;
 
 public class CoinGeckoUtils {
 
@@ -27,18 +26,16 @@ public class CoinGeckoUtils {
 
         Map<Long, BigDecimal> dailyItems = new LinkedHashMap<>();
 
-        LocalDateTime previousDate = null;
+        LocalDate previousDate = null;
         for (JsonNode item : json) {
-            Long epoch = Long.parseLong(item.get(0).asText());
-
-            ZonedDateTime zdt = Instant.ofEpochMilli(epoch).atZone(ZoneId.of("UTC"));
-            LocalDateTime dateTime = zdt.toLocalDateTime();
+            long epoch = Long.parseLong(item.get(0).asText());
+            LocalDate date = convertEpochToDate(epoch);
 
             // Looping though the list, adding the first value of each date
-            if (previousDate == null || dateTime.getDayOfMonth() != previousDate.getDayOfMonth()) {
+            if (previousDate == null || date.getDayOfMonth() != previousDate.getDayOfMonth()) {
                 dailyItems.put(epoch, new BigDecimal(item.get(1).asText()));
             }
-            previousDate = dateTime;
+            previousDate = date;
         }
         LOG.debug("DAILY ITEMS (out):\n" + dailyItems);
 
