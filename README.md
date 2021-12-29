@@ -4,7 +4,7 @@ Bitcoin API allows checking certain Bitcoin information.
 
 ## Usage
 
-The service has been built and tested using **Java 11**.
+The service uses Java 11.
 
 ### Run Maven project  
 
