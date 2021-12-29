@@ -1,6 +1,6 @@
 # Bitcoin API
 
-Bitcoin API allows checking certain bitcoin information.
+Bitcoin API allows checking certain Bitcoin information.
 
 ## Usage
 

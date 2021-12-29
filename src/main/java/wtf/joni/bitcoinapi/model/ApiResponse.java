@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 public class ApiResponse {
 
-
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String description;
 

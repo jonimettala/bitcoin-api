@@ -9,7 +9,9 @@ import org.springframework.stereotype.Component;
 import java.text.ParseException;
 import java.time.LocalDate;
 
-import static wtf.joni.bitcoinapi.util.TimeUtils.*;
+import static wtf.joni.bitcoinapi.util.TimeUtils.convertEpochToDate;
+import static wtf.joni.bitcoinapi.util.TimeUtils.convertToEpoch;
+import static wtf.joni.bitcoinapi.util.TimeUtils.dateIsValid;
 
 @Component
 public class PrepareDateValues implements Processor {
