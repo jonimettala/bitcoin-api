@@ -37,9 +37,10 @@ public class CountBestBuyAndSellDates implements Processor {
             BigDecimal possiblyHighestPrice = entry.getValue();
 
             for (Map.Entry<Long, BigDecimal> e : dailyValues.entrySet()) {
-                if (e.getValue().compareTo(possiblyHighestPrice) > 0) {
+                LocalDate date = convertEpochToDate(e.getKey());
+                if (date.isAfter(possiblyHighestBuyDate) && e.getValue().compareTo(possiblyHighestPrice) > 0) {
                     possiblyHighestPrice = e.getValue();
-                    possiblyHighestSellDate = convertEpochToDate(e.getKey());
+                    possiblyHighestSellDate = date;
                 }
                 LOG.debug(entry.getValue() + " " + e.getValue() + " " + possiblyHighestPrice);
             }
